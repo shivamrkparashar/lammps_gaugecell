@@ -111,6 +111,8 @@ FixMCEMC::FixMCEMC(LAMMPS *lmp, int narg, char **arg) :
   if (seed <= 0) error->all(FLERR,"Illegal fix mcemc command");
   if (reservoir_temperature < 0.0)
     error->all(FLERR,"Illegal fix mcemc command");
+  if (ntotal < 0.0) error->all(FLERR,"Illegal fix mcemc command");
+  if (gaugecell_volume < 0.0) error->all(FLERR,"Illegal fix mcemc command");
   if (displace < 0.0) error->all(FLERR,"Illegal fix mcemc command");
 
   // read options from end of input line
