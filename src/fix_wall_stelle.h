@@ -13,20 +13,20 @@
 
 #ifdef FIX_CLASS
 // clang-format off
-FixStyle(wall/lj1043,FixWallLJ1043);
+FixStyle(wall/stelle,FixWallSTELLE);
 // clang-format on
 #else
 
-#ifndef LMP_FIX_WALL_LJ1043_H
-#define LMP_FIX_WALL_LJ1043_H
+#ifndef LMP_FIX_WALL_STELLE_H
+#define LMP_FIX_WALL_STELLE_H
 
 #include "fix_wall.h"
 
 namespace LAMMPS_NS {
 
-class FixWallLJ1043 : public FixWall {
+class FixWallSTELLE : public FixWall {
  public:
-  FixWallLJ1043(class LAMMPS *, int, char **);
+  FixWallSTELLE(class LAMMPS *, int, char **);
   void precompute(int) override;
   void wall_particle(int, int, double) override;
 

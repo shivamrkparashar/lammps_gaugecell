@@ -15,7 +15,7 @@
    Contributing author: Jonathan Lee (Sandia)
 ------------------------------------------------------------------------- */
 
-#include "fix_wall_lj1043.h"
+#include "fix_wall_stelle.h"
 
 #include "atom.h"
 #include "math_const.h"
@@ -29,19 +29,19 @@ using MathSpecial::powint;
 
 /* ---------------------------------------------------------------------- */
 
-FixWallLJ1043::FixWallLJ1043(LAMMPS *lmp, int narg, char **arg) : FixWall(lmp, narg, arg)
+FixWallSTELLE::FixWallSTELLE(LAMMPS *lmp, int narg, char **arg) : FixWall(lmp, narg, arg)
 {
   dynamic_group_allow = 1;
 }
 
 /* ---------------------------------------------------------------------- */
 
-void FixWallLJ1043::precompute(int m)
+void FixWallSTELLE::precompute(int m)
 {
   coeff1[m] = MY_2PI * 2.0 / 5.0 * epsilon[m] * powint(sigma[m], 10);
   coeff2[m] = MY_2PI * epsilon[m] * powint(sigma[m], 4);
-  coeff3[m] = MY_2PI * pow(2.0, 1 / 2.0) / 3 * epsilon[m] * powint(sigma[m], 3);
-  coeff4[m] = 0.61 / pow(2.0, 1 / 2.0) * sigma[m];
+  coeff3[m] = MY_2PI / 3 /spacing[m] * epsilon[m] * powint(sigma[m], 4);
+  coeff4[m] = 0.61 * spacing[m] * sigma[m];
   coeff5[m] = coeff1[m] * 10.0;
   coeff6[m] = coeff2[m] * 4.0;
   coeff7[m] = coeff3[m] * 3.0;
@@ -55,7 +55,7 @@ void FixWallLJ1043::precompute(int m)
 
 /* ---------------------------------------------------------------------- */
 
-void FixWallLJ1043::wall_particle(int m, int which, double coord)
+void FixWallSTELLE::wall_particle(int m, int which, double coord)
 {
   double delta, rinv, r2inv, r4inv, r10inv, fwall;
   double vn;
