@@ -58,6 +58,7 @@ FixWall::FixWall(LAMMPS *lmp, int narg, char **arg) : Fix(lmp, narg, arg), nwall
 
   while (iarg < narg) {
     int wantargs = 5;
+    if (utils::strmatch(style, "^wall/stelle")) wantargs = 6;
     if (utils::strmatch(style, "^wall/lepton")) wantargs = 4;
     if (utils::strmatch(style, "^wall/morse")) wantargs = 6;
 
@@ -144,6 +145,9 @@ FixWall::FixWall(LAMMPS *lmp, int narg, char **arg) : Fix(lmp, narg, arg), nwall
           sstyle[nwall] = CONSTANT;
         }
         cutoff[nwall] = utils::numeric(FLERR, arg[iarg + 4], false, lmp);
+        if (utils::strmatch(style, "^wall/stelle")) {
+            spacing[nwall] = utils::numeric(FLERR, arg[iarg + 5], false, lmp);
+        }
       }
       nwall++;
       iarg += wantargs;
