@@ -1,0 +1,55 @@
+# MCEMC for LJ simple fluid, no dynamics
+
+# variables modifiable using -var command line switch
+
+variable        temp index 2.0
+variable        disp index 1.0
+variable        lbox index 5.0
+variable        ntotal index 80         # ntotal (Ngauge + Nsimulation)
+variable        vgauge index 12000000   # volume of gauge cell
+
+# global model settings
+
+units           lj
+atom_style      atomic
+pair_style      lj/cut 3.0
+pair_modify     tail no # turn of to avoid triggering full_energy
+
+# box
+
+region          box block 0 ${lbox} 0 ${lbox} 0 ${lbox}
+create_box      1 box
+
+# lj parameters
+
+pair_coeff      * * 1.0 1.0
+mass            * 1.0
+
+# we recommend setting up a dedicated group for gcmc
+
+group           mcemcgroup type 1
+
+# mcemc
+
+fix             mymcemc mcemcgroup mcemc 1 100 100 1 ${temp} ${ntotal} ${vgauge} ${disp} 
+
+# atom count
+
+variable        type1 atom "type==1"
+group           type1 dynamic gcmcgroup var type1
+variable        n1 equal count(type1)
+
+
+# averaging
+fix             ave all ave/time 1 100 100 v_n1 ave one file output_${m}.dat
+
+
+compute_modify  thermo_temp dynamic yes
+thermo_style    custom step atoms v_n1 lx ly lz temp press pe ke etotal enthalpy    
+thermo          ${thermo_every}                                                     
+
+
+
+# run
+
+run             10000
